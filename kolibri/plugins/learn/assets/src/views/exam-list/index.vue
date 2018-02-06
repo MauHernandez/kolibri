@@ -2,9 +2,20 @@
 
   <div>
     <auth-message v-if="!isUserLoggedIn" authorizedRole="learner" />
-
     <div v-else>
       <page-header :title="$tr('examName')" />
+      <k-select
+        :label="$tr('status')"
+        :options="statusOptions"
+        :inline="true"
+        v-model="statusSelected"
+      />
+      <k-select
+        :label="$tr('class')"
+        :options="classOptions"
+        :inline="true"
+        v-model="classSelected"
+      />
       <p v-if="activeExams" class="exams-assigned">
         {{ $tr('assignedTo', { assigned: activeExams }) }}
       </p>
@@ -59,6 +70,7 @@
   import authMessage from 'kolibri.coreVue.components.authMessage';
   import pageHeader from '../page-header';
   import kRouterLink from 'kolibri.coreVue.components.kRouterLink';
+  import kSelect from 'kolibri.coreVue.components.kSelect';
   import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
 
   export default {
@@ -67,6 +79,7 @@
       authMessage,
       pageHeader,
       kRouterLink,
+      kSelect,
     },
     mixins: [responsiveWindow],
     $trs: {
@@ -78,6 +91,19 @@
       start: 'Start',
       noExams: 'You have no exams assigned',
       assignedTo: 'You have { assigned } {assigned, plural, one {exam} other {exams} } assigned',
+      all: 'All',
+      active: 'Active',
+      inactive: 'Inactive',
+      status: 'Status',
+      class: 'Class',
+      class1: 'Class1', //dummy class
+      class2: 'Class2', //dummy class
+    },
+    data() {
+      return {
+        statusSelected: { label: this.$tr('all'), value: this.$tr('all') },
+        classSelected: { label: this.$tr('all'), value: this.$tr('all') },
+      };
     },
     computed: {
       activeExams() {
@@ -103,6 +129,20 @@
       },
       thirdColClass() {
         return this.secondColClass;
+      },
+      statusOptions() {
+        return [
+          { label: this.$tr('all'), value: this.$tr('all') },
+          { label: this.$tr('active'), value: this.$tr('active') },
+          { label: this.$tr('inactive'), value: this.$tr('inactive') },
+        ];
+      },
+      classOptions() {
+        return [
+          { label: this.$tr('all'), value: this.$tr('all') },
+          { label: this.$tr('class1'), value: this.$tr('class1') },
+          { label: this.$tr('class2'), value: this.$tr('class2') },
+        ];
       },
     },
     methods: {
